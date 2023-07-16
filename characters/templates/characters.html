@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Elden Ring Character Tracker</title>
+</head>
+<body>
+    <h1>Elden Ring Character Tracker</h1>
+    <h2>Create a New Character</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Create Character</button>
+    </form>
+    <h2>Profiles</h2>
+    <ul>
+        {% for character in characters %}
+            <li>
+                {{ character.name }} - Level {{ character.level }} - {{ character.class_name }}
+                <a href="{% url 'characterprofile' character_id=character.id %}">Edit</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

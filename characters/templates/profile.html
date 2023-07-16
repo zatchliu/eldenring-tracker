@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Character Profile</title>
+</head>
+<body>
+    <h1>{{ name }}</h1>
+    <p> Level: {{ level }} Starting Class: {{ class_name }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+</body>
+</html>
