@@ -10,29 +10,26 @@
     <h1>{{ name }}</h1>
     <p> Level: {{ level }} Starting Class: {{ class_name }}</p>
     <a href="{% url 'character_list' %}">Back to Character List</a>
-    <div class="character-edit-container">
-        <div class="stats-container">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" value="Save Changes">
-            </form>
+    <form method="post" name="characterForm">
+        {% csrf_token %}
+        <div class="form-container">
+            <h2>Stats:</h2>
+            {{ form.as_p }}
+            <input type="submit" value="Save Changes">
         </div>
         <div class="bosses-container">
-            <h2>Completed Bosses</h2>
+            <h2>Bosses:</h2>
             {% for location, bosses in boss_by_region.items %}
-                <div>
-                    <h3>{{ location }}</h3>
-                    {% for boss in bosses %}
-                        <label>
-                            <input type="checkbox" name="completed_bosses" value="{{ boss.id }}"
-                                   {% if boss in character.completed_bosses.all %}checked{% endif %}>
-                            {{ boss.name }}
-                        </label>
-                    {% endfor %}
-                </div>
+                <h3>{{ location }}</h3>
+                {% for boss in bosses %}
+                    <label>
+                        <input type="checkbox" name="completed_bosses" value="{{ boss.id }}"
+                            {% if boss in character.completed_bosses.all %}checked{% endif %}>
+                        {{ boss.name }}
+                    </label>
+                {% endfor %}
             {% endfor %}
         </div>
-    </div>
+    </form>
 </body>
 </html>

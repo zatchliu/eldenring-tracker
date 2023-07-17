@@ -33,4 +33,4 @@ class CharacterProfileForm(forms.ModelForm):
                   'intelligence', 
                   'faith', 
                   'arcane',
-                  'completed_bosses']
+                  ]
