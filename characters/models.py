@@ -1,6 +1,14 @@
 from django.db import models
 
 # Create your models here.
+class Boss(models.Model):
+    name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    region=models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Character(models.Model):
     name = models.CharField(max_length=100)
     level = models.IntegerField(default=0)
@@ -13,6 +21,7 @@ class Character(models.Model):
     intelligence=models.IntegerField(default=0)
     faith=models.IntegerField(default=0)
     arcane=models.IntegerField(default=0)
+    completed_bosses = models.ManyToManyField(Boss, blank=True)
 
     def __str__(self):
         return self.name
@@ -40,7 +49,6 @@ class Character(models.Model):
                      (self.arcane-old_arcane)
                      )
                      
-
         self.level+=stat_diff
 
         super(Character, self).save(*args, **kwargs)

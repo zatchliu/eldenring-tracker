@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'characters/profile.css' %}">
 <html>
 <head>
     <title>Character Profile</title>
@@ -6,11 +9,30 @@
 <body>
     <h1>{{ name }}</h1>
     <p> Level: {{ level }} Starting Class: {{ class_name }}</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save Changes</button>
-    </form>
     <a href="{% url 'character_list' %}">Back to Character List</a>
+    <div class="character-edit-container">
+        <div class="stats-container">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Save Changes">
+            </form>
+        </div>
+        <div class="bosses-container">
+            <h2>Completed Bosses</h2>
+            {% for location, bosses in boss_by_region.items %}
+                <div>
+                    <h3>{{ location }}</h3>
+                    {% for boss in bosses %}
+                        <label>
+                            <input type="checkbox" name="completed_bosses" value="{{ boss.id }}"
+                                   {% if boss in character.completed_bosses.all %}checked{% endif %}>
+                            {{ boss.name }}
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>

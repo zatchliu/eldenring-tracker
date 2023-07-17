@@ -1,6 +1,6 @@
 import requests
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Character
+from .models import Character, Boss
 from .forms import CharacterName, CharacterProfileForm
 
 def home(request):
@@ -16,6 +16,7 @@ def character_list(request):
       character_name = form.cleaned_data['character_name']
       character_class = form.cleaned_data['character_class']
 
+      #Getting stats from Elden Ring API
       url = 'https://eldenring.fanapis.com/api/classes'
       response = requests.get(url)
 
@@ -42,6 +43,15 @@ def character_list(request):
   return render(request, 'characters.html', {'characters': characters, 'form': form})
 
 def characterprofile(request, character_id):
+  all_bosses=Boss.objects.all()
+  boss_by_region={}
+
+  #Mapping bosses by region
+  for boss in all_bosses:
+    if boss.region not in boss_by_region:
+      boss_by_region[boss.region]=[]
+    boss_by_region[boss.region].append(boss)
+
   character = get_object_or_404(Character, id=character_id)
   name = character.name
   level=character.level
@@ -50,11 +60,17 @@ def characterprofile(request, character_id):
 
   if request.method == 'POST':
     if form.is_valid():
-      form.save()
+      character=form.save()
+      completed_bosses_ids = request.POST.getlist('completed_bosses')
+      character.completed_bosses.set(completed_bosses_ids)
       return redirect('characterprofile', character_id=character_id)
 
   return render(request, 'profile.html', {'form': form, 
                                           'level':level,
                                           'class_name':class_name,
-                                          'character': character, 'name':name})
+                                          'character': character, 
+                                          'name':name, 
+                                          'all_bosses':all_bosses,
+                                          'boss_by_region':boss_by_region,
+                                          })
 

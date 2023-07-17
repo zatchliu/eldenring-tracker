@@ -25,4 +25,12 @@ class CharacterName(forms.Form):
 class CharacterProfileForm(forms.ModelForm):
     class Meta:
         model = Character
-        fields = ['vigor', 'mind', 'endurance', 'strength', 'dexterity', 'intelligence', 'faith', 'arcane']
+        fields = ['vigor', 
+                  'mind', 
+                  'endurance', 
+                  'strength', 
+                  'dexterity', 
+                  'intelligence', 
+                  'faith', 
+                  'arcane',
+                  'completed_bosses']
