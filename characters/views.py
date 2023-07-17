@@ -10,12 +10,15 @@ def character_list(request):
   character_name=None
   characters = Character.objects.all()
   form = CharacterName(request.POST or None)
+
   if request.method == 'POST':
     if form.is_valid():
       character_name = form.cleaned_data['character_name']
       character_class = form.cleaned_data['character_class']
+
       url = 'https://eldenring.fanapis.com/api/classes'
       response = requests.get(url)
+
       if response.status_code == 200:
         characters_data = response.json()['data']
         for character_data in characters_data:
@@ -48,7 +51,7 @@ def characterprofile(request, character_id):
   if request.method == 'POST':
     if form.is_valid():
       form.save()
-      return redirect('character_list')
+      return redirect('characterprofile', character_id=character_id)
 
   return render(request, 'profile.html', {'form': form, 
                                           'level':level,
