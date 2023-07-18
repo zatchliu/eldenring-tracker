@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+// src/components/CharacterList.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function App() {
+const CharacterList = () => {
+  const [characters, setCharacters] = useState([]);
+
+  useEffect(() => {
+    fetchCharacters();
+  }, []);
+
+  const fetchCharacters = async () => {
+    try {
+      const response = await axios.get('/api/characters/');
+      setCharacters(response.data);
+    } catch (error) {
+      console.error('Error fetching characters:', error);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Character List</h2>
+      <ul>
+        {characters.map((character) => (
+          <li key={character.id}>
+            <p>Name: {character.name}</p>
+            <p>Class: {character.character_class}</p>
+            {/* Add other character information as needed */}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
-export default App;
+export default CharacterList;
+
