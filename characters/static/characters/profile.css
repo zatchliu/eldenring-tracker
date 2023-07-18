@@ -1,12 +1,16 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Garamond Premier';
   line-height: 1.6;
   margin: 20px;
+  background-color: #242424;
+  color: #ffffff;
 }
 
 h1 {
-  font-size: 32px;
+  font-size: 45px;
   margin-bottom: 10px;
+  font-family: 'Garamond Premier';
+  font-weight: normal;
 }
 
 h2 {
@@ -22,7 +26,7 @@ h3 {
 }
 
 p {
-  font-size: 16px;
+  font-size: 20px;
   margin: 0;
 }
 
@@ -41,7 +45,7 @@ form {
 }
 
 .form-container {
-  flex: 0.3;
+  flex: 0.4;
 }
 
 .form-container label {
@@ -57,12 +61,14 @@ form {
 .bosses-container label {
   display: block;
   margin-bottom: 10px;
+  flex-wrap: wrap-reverse;
 }
 
-.bosses-container .location-container {
+.location-container {
+  max-width: 100%;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 40px;
 }
 
 input[type="checkbox"] {

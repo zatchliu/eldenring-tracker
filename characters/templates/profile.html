@@ -19,16 +19,20 @@
         </div>
         <div class="bosses-container">
             <h2>Bosses:</h2>
-            {% for location, bosses in boss_by_region.items %}
-                <h3>{{ location }}</h3>
-                {% for boss in bosses %}
-                    <label>
-                        <input type="checkbox" name="completed_bosses" value="{{ boss.id }}"
-                            {% if boss in character.completed_bosses.all %}checked{% endif %}>
-                        {{ boss.name }}
-                    </label>
+            <div class="location-container">
+                {% for location, bosses in boss_by_region.items %}
+                    <div class=location>
+                        <h3>{{ location }}</h3>
+                        {% for boss in bosses %}
+                            <label>
+                                <input type="checkbox" name="completed_bosses" value="{{ boss.id }}"
+                                {% if boss in character.completed_bosses.all %}checked{% endif %}>
+                            {{ boss.name }}
+                            </label>
+                        {% endfor %}
+                    </div>
                 {% endfor %}
-            {% endfor %}
+            </div>
         </div>
     </form>
 </body>

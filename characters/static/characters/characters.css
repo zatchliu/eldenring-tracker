@@ -1,12 +1,16 @@
-/* Body Styles */
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Garamond Premier';
   margin: 20px;
+  background-color: #242424;
+  color: #ffffff;
 }
 
-/* Character List Styles */
 h1 {
   margin-bottom: 20px;
+  font-family: 'Garamond Premier';
+  font-weight: normal;
+  color: #e5d17a;
 }
 
 ul {
@@ -15,7 +19,14 @@ ul {
 }
 
 li {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  padding: 20px;
+  border: 3px solid #e4daad;
+  border-radius: 2px;
+  background-color: #242424;
+  font-size: 25px;
+  color: #ffffff;
+  line-height: 1.5;
 }
 
 li a {
@@ -26,3 +37,13 @@ li a {
 li a:hover {
   text-decoration: underline;
 }
+
+.container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+}
+
+
+
