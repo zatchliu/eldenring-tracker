@@ -1,14 +1,59 @@
 import requests
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Character, Boss
-from .forms import CharacterName, CharacterProfileForm
+from .forms import CharacterName, CharacterProfileForm, CharacterForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 def home(request):
-  return redirect(character_list)
+  return redirect(login_user)
 
+def logout_user(request):
+    logout(request)
+    return redirect(login_user)
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(login_user)
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
+
+def login_user(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect(character_list) 
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+@login_required
+def delete_character(request, character_id):
+    character = get_object_or_404(Character, id=character_id)
+
+    # Ensure the user owns the character before allowing deletion
+    if character.user != request.user:
+        return JsonResponse({'status': 'error', 'message': 'You are not authorized to delete this character.'}, status=403)
+
+    if request.method == 'DELETE':
+        character.delete()
+        return JsonResponse({'status': 'success', 'message': 'Character deleted successfully.'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid method.'}, status=400)
+
+@login_required
 def character_list(request):
   character_name=None
-  characters = Character.objects.all()
+  user= request.user
+  characters = Character.objects.filter(user=request.user)
   form = CharacterName(request.POST or None)
 
   if request.method == 'POST':
@@ -25,7 +70,8 @@ def character_list(request):
         for character_data in characters_data:
           if character_data['name'] == character_class:
             character_level=character_data['stats']['level']
-            new_character=Character.objects.get_or_create(name=character_name,
+            new_character=Character.objects.get_or_create(user=user,
+                                                          name=character_name,
                                                           level=character_level,
                                                           class_name=character_class,
                                                           vigor=character_data['stats']['vigor'],
@@ -42,6 +88,7 @@ def character_list(request):
           
   return render(request, 'characters.html', {'characters': characters, 'form': form})
 
+@login_required
 def characterprofile(request, character_id):
   all_bosses=Boss.objects.all()
   boss_by_region={}
@@ -53,6 +100,8 @@ def characterprofile(request, character_id):
     boss_by_region[boss.region].append(boss)
 
   character = get_object_or_404(Character, id=character_id)
+  if character.user != request.user:
+        return redirect('character_list')
   name = character.name
   level=character.level
   class_name = character.class_name

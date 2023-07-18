@@ -2,6 +2,11 @@ from django import forms
 from .models import Character
 import requests
 
+class CharacterForm(forms.ModelForm):
+    class Meta:
+        model = Character
+        fields = ['name', 'class_name']
+
 class CharacterName(forms.Form):
     character_name = forms.CharField(label='Enter Your Character Name', max_length=100)
     character_class = forms.ChoiceField(label='Select Character Class', choices=[])

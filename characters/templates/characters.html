@@ -8,6 +8,9 @@
 </head>
 <body>
     <h1>Elden Ring Character Tracker</h1>
+    {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Logout</a>
+    {% endif %}
     <h2>Create a New Character</h2>
     <form method="post">
         {% csrf_token %}
@@ -20,8 +23,50 @@
             <li>
                 {{ character.name }} - Level {{ character.level }} - {{ character.class_name }}
                 <a href="{% url 'characterprofile' character_id=character.id %}">Edit</a>
+                <a href="#" class="delete-link" data-character-id="{{ character.id }}" data-character-name="{{ character.name }}">Delete</a>
             </li>
         {% endfor %}
     </ul>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const deleteLinks = document.querySelectorAll('.delete-link');
+        
+        deleteLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          const characterId = this.dataset.characterId;
+          const characterName = this.dataset.characterName;
+        
+          if (confirm(`Are you sure you want to delete the character "${characterName}"?`)) {
+            // Send the AJAX request to delete the character
+            fetch(`/delete/${characterId}/`, {
+              method: 'DELETE',
+              headers: {
+                'X-CSRFToken': getCookie('csrftoken'), // Get CSRF token from cookies
+              },
+            })
+            .then(response => {
+              if (response.ok) {
+                // Remove the deleted character from the list
+                this.parentNode.remove();
+              } else {
+                // Handle any error cases if needed
+              }
+            })
+            .catch(error => {
+              // Handle fetch errors if needed
+            });
+          }
+        });
+        });
+        
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        });
+    </script>
 </body>
 </html>
